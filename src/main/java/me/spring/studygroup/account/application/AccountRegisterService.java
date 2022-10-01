@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import me.spring.studygroup.account.domain.Account;
 import me.spring.studygroup.account.domain.AccountRepository;
+import me.spring.studygroup.account.infrastructure.thymeleaf.ViewTemplateContextService;
 import me.spring.studygroup.account.presentation.form.SignUpForm;
 
 @Service
@@ -17,13 +18,15 @@ public class AccountRegisterService {
 	private final AccountRepository accountRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final ModelMapper modelMapper;
+	private final ViewTemplateContextService templateContextService;
 
 	@Transactional
 	public Account processNewAccount(SignUpForm signUpForm) {
 		signUpForm.setPassword(passwordEncoder.encode(signUpForm.getPassword()));
 		Account account = modelMapper.map(signUpForm, Account.class);
 
-		// TODO 이메일 인증
+		templateContextService.processAndSendSignUpConfirmEmail(account);
+
 		return accountRepository.save(account);
 	}
 }

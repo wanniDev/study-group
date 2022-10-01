@@ -1,6 +1,7 @@
 package me.spring.studygroup.account.domain;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -33,6 +34,8 @@ public class Account {
 
 	private String emailCheckToken;
 
+	private LocalDateTime emailCheckTokenGeneratedAt;
+
 	private LocalDateTime joinedAt;
 
 	private String bio;
@@ -55,4 +58,9 @@ public class Account {
 	private boolean studyUpdatedByEmail;
 
 	private boolean studyUpdatedByWeb;
+
+	public void generateEmailCheckToken() {
+		this.emailCheckToken = UUID.randomUUID().toString();
+		this.emailCheckTokenGeneratedAt = LocalDateTime.now();
+	}
 }
