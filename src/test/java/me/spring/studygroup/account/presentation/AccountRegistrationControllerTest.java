@@ -10,9 +10,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import me.spring.studygroup.account.application.EmailService;
+import me.spring.studygroup.account.infrastructure.thymeleaf.ViewTemplateContextService;
+
 @SpringBootTest
+@ActiveProfiles("test")
 @AutoConfigureMockMvc
 class AccountRegistrationControllerTest {
 	@Autowired
@@ -37,6 +42,18 @@ class AccountRegistrationControllerTest {
 			.with(csrf())
 		).andExpect(status().isOk())
 			.andExpect(view().name("account/sign-up"))
+			.andExpect(unauthenticated());
+	}
+
+	@DisplayName("인증 메일 확인 - 입력값 오류")
+	@Test
+	void checkEmailToken_with_wrong_input() throws Exception {
+		mockMvc.perform(get("/check-email-token")
+				.param("token", "sdfjslwfwef")
+				.param("email", "email@email.com"))
+			.andExpect(status().isOk())
+			.andExpect(model().attributeExists("error"))
+			.andExpect(view().name("account/checked-email"))
 			.andExpect(unauthenticated());
 	}
 }
