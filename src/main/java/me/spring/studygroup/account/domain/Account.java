@@ -12,11 +12,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
-@Getter
+@Data
 @EqualsAndHashCode(of = "id")
 public class Account {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
