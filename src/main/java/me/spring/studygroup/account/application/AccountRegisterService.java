@@ -13,12 +13,14 @@ import me.spring.studygroup.account.presentation.form.SignUpForm;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class AccountRegisterService {
 
 	private final AccountRepository accountRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final ModelMapper modelMapper;
 	private final ViewTemplateContextService templateContextService;
+	private final AccountAuthService accountAuthService;
 
 	@Transactional
 	public Account processNewAccount(SignUpForm signUpForm) {
@@ -28,5 +30,11 @@ public class AccountRegisterService {
 		templateContextService.processAndSendSignUpConfirmEmail(account);
 
 		return accountRepository.save(account);
+	}
+
+	@Transactional
+	public void completeSignUp(Account account) {
+		account.completeSignUp();
+		accountAuthService.login(account);
 	}
 }

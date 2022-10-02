@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import lombok.RequiredArgsConstructor;
 import me.spring.studygroup.account.application.AccountAuthService;
+import me.spring.studygroup.account.application.AccountInfoFinderService;
 import me.spring.studygroup.account.application.AccountRegisterService;
 import me.spring.studygroup.account.application.SignUpFormValidator;
 import me.spring.studygroup.account.domain.Account;
@@ -23,6 +24,7 @@ public class AccountRegistrationController {
 	private final SignUpFormValidator signUpFormValidator;
 	private final AccountRegisterService accountRegisterService;
 	private final AccountAuthService accountAuthService;
+	private final AccountInfoFinderService accountInfoFinderService;
 
 	@InitBinder("signUpForm")
 	public void initBinder(WebDataBinder webDataBinder) {
@@ -43,5 +45,26 @@ public class AccountRegistrationController {
 		Account account = accountRegisterService.processNewAccount(signUpForm);
 		accountAuthService.login(account);
 		return "redirect:/";
+	}
+
+	@GetMapping("/check-email-token")
+	public String checkEmailToken(String token, String email, Model model) {
+		Account account = accountInfoFinderService.findByEmail(email);
+		String viewPath = "account/checked-email";
+
+		if (account == null) {
+			model.addAttribute("error", "wrong.email");
+			return viewPath;
+		}
+
+		if (!account.isValidToken(token)) {
+			model.addAttribute("error", "wrong.token");
+			return viewPath;
+		}
+
+		accountRegisterService.completeSignUp(account);
+		model.addAttribute("nickname", account.getNickname());
+
+		return viewPath;
 	}
 }
