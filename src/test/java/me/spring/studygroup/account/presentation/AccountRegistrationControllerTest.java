@@ -76,6 +76,7 @@ class AccountRegistrationControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(model().attributeDoesNotExist("error"))
 			.andExpect(model().attributeExists("nickname"))
-			.andExpect(view().name("account/checked-email"));
+			.andExpect(view().name("account/checked-email"))
+			.andExpect(authenticated());
 	}
 }
