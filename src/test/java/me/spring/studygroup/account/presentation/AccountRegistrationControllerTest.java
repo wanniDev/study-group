@@ -13,8 +13,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import me.spring.studygroup.account.application.AccountRegisterService;
 import me.spring.studygroup.account.application.EmailService;
+import me.spring.studygroup.account.domain.Account;
 import me.spring.studygroup.account.infrastructure.thymeleaf.ViewTemplateContextService;
+import me.spring.studygroup.account.presentation.form.SignUpForm;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -22,6 +25,9 @@ import me.spring.studygroup.account.infrastructure.thymeleaf.ViewTemplateContext
 class AccountRegistrationControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
+
+	@Autowired
+	private AccountRegisterService accountRegisterService;
 
 	@DisplayName("회원가입 뷰를 가리키는지 확인하는 테스트")
 	@Test
@@ -55,5 +61,21 @@ class AccountRegistrationControllerTest {
 			.andExpect(model().attributeExists("error"))
 			.andExpect(view().name("account/checked-email"))
 			.andExpect(unauthenticated());
+	}
+
+	@DisplayName("인증 메일 정상 동작 테스트")
+	@Test
+	void checkEmailToken() throws Exception {
+		SignUpForm signUpForm = new SignUpForm("testNickname", "test1234@gmail.com", "aDFe!we$W%^12354");
+
+		Account newAccount = accountRegisterService.processNewAccount(signUpForm);
+
+		mockMvc.perform(get("/check-email-token")
+			.param("token", newAccount.getEmailCheckToken())
+			.param("email", newAccount.getEmail()))
+			.andExpect(status().isOk())
+			.andExpect(model().attributeDoesNotExist("error"))
+			.andExpect(model().attributeExists("nickname"))
+			.andExpect(view().name("account/checked-email"));
 	}
 }

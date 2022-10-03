@@ -6,10 +6,14 @@ import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import me.spring.studygroup.util.validation.Password;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SignUpForm {
 
 	@NotBlank
