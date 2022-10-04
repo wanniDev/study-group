@@ -8,13 +8,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import me.spring.studygroup.account.domain.Account;
+import me.spring.studygroup.account.infrastructure.security.AccountPrincipal;
 
 @Service
 public class AccountAuthService {
 
 	public void login(Account account) {
 		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-			account.getNickname(),
+			new AccountPrincipal(account),
 			account.getPassword(),
 			List.of(new SimpleGrantedAuthority("ROLE_USER")));
 		SecurityContextHolder.getContext().setAuthentication(token);
