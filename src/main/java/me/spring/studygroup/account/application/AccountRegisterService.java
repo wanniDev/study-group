@@ -26,8 +26,9 @@ public class AccountRegisterService {
 	public Account processNewAccount(SignUpForm signUpForm) {
 		signUpForm.setPassword(passwordEncoder.encode(signUpForm.getPassword()));
 		Account account = modelMapper.map(signUpForm, Account.class);
+		account.generateEmailCheckToken();
 
-		templateContextService.processAndSendSignUpConfirmEmail(account);
+		templateContextService.sendSignUpConfirmEmail(account);
 
 		return accountRepository.save(account);
 	}

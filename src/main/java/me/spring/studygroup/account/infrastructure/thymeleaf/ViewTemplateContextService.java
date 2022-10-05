@@ -17,8 +17,7 @@ public class ViewTemplateContextService {
 	private final AppProperties appProperties;
 	private final EmailService emailService;
 
-	public void processAndSendSignUpConfirmEmail(Account newAccount) {
-		newAccount.generateEmailCheckToken();
+	public void sendSignUpConfirmEmail(Account newAccount) {
 
 		Context context = new Context();
 		context.setVariable("link", "/check-email-token?token=" + newAccount.getEmailCheckToken() +
