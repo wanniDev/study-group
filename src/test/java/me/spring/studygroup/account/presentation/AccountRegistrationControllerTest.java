@@ -8,20 +8,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import me.spring.studygroup.account.application.AccountRegisterService;
-import me.spring.studygroup.account.application.EmailService;
 import me.spring.studygroup.account.domain.Account;
-import me.spring.studygroup.account.infrastructure.thymeleaf.ViewTemplateContextService;
 import me.spring.studygroup.account.presentation.form.SignUpForm;
+import me.spring.studygroup.common.annotation.MockMvcTest;
 
-@SpringBootTest
-@ActiveProfiles("test")
-@AutoConfigureMockMvc
+@MockMvcTest
 class AccountRegistrationControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
