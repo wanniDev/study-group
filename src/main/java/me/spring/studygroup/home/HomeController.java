@@ -6,12 +6,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import me.spring.studygroup.account.domain.Account;
+import me.spring.studygroup.account.infrastructure.security.AuthAccount;
 
 @Controller
 public class HomeController {
 	@GetMapping("/")
-	public String home(@AuthenticationPrincipal(expression = "#this == 'anonymousUser' ? null : account")
-		Account account, Model model) {
+	public String home(@AuthAccount Account account, Model model) {
 
 		if (account != null) {
 			model.addAttribute(account);

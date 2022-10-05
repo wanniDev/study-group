@@ -82,4 +82,8 @@ public class Account {
 		this.emailVerified = true;
 		this.joinedAt = LocalDateTime.now();
 	}
+
+	public boolean canSendConfirmEmail() {
+		return this.emailCheckTokenGeneratedAt.isBefore(LocalDateTime.now().minusHours(1));
+	}
 }
