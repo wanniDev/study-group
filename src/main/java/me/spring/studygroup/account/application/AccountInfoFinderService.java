@@ -24,4 +24,8 @@ public class AccountInfoFinderService {
 	public Account findByEmail(String email) {
 		return accountRepository.findByEmail(email).orElse(null);
 	}
+
+	public Account findByNickName(String nickname) {
+		return accountRepository.findByNickname(nickname).orElse(null);
+	}
 }
