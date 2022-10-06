@@ -58,7 +58,7 @@ class AccountProfileControllerTest {
 		Account wannidev = accountInfoFinderService.findByNickName("wannidev");
 		assertEquals(bio, wannidev.getBio());
 	}
-	
+
 	@Test
 	@WithAccount("wannidev")
 	@DisplayName("잘못된 입력값으로 프로필 수정")
@@ -73,7 +73,7 @@ class AccountProfileControllerTest {
 			.andExpect(model().attributeExists("profileForm"))
 			.andExpect(model().hasErrors());
 
-		Account keesun = accountInfoFinderService.findByNickName("wannidev");
-		assertNull(keesun.getBio());
+		Account wannidev = accountInfoFinderService.findByNickName("wannidev");
+		assertNull(wannidev.getBio());
 	}
 }
