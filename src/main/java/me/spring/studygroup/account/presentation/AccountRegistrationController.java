@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 import me.spring.studygroup.account.application.AccountAuthService;
 import me.spring.studygroup.account.application.AccountInfoFinderService;
 import me.spring.studygroup.account.application.AccountRegisterService;
-import me.spring.studygroup.account.application.SignUpFormValidator;
+import me.spring.studygroup.account.presentation.validator.SignUpFormValidator;
 import me.spring.studygroup.account.domain.Account;
 import me.spring.studygroup.account.infrastructure.security.AuthAccount;
 import me.spring.studygroup.account.infrastructure.thymeleaf.ViewTemplateContextService;
