@@ -9,6 +9,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
 import me.spring.studygroup.account.application.AccountInfoFinderService;
@@ -24,10 +25,10 @@ class AccountProfileControllerTest {
 	MockMvc mockMvc;
 	@Autowired
 	AccountRepository accountRepository;
-
 	@Autowired
 	AccountInfoFinderService accountInfoFinderService;
-
+	@Autowired
+	PasswordEncoder passwordEncoder;
 	@AfterEach
 	void afterEach() {
 		accountRepository.deleteAll();
@@ -75,5 +76,46 @@ class AccountProfileControllerTest {
 
 		Account wannidev = accountInfoFinderService.findByNickName("wannidev");
 		assertNull(wannidev.getBio());
+	}
+
+	@Test
+	@WithAccount("wannidev")
+	@DisplayName("패스워드 수정 폼")
+	void updatePassword_form() throws Exception {
+		mockMvc.perform(get("/settings/password"))
+			.andExpect(status().isOk())
+			.andExpect(model().attributeExists("account"))
+			.andExpect(model().attributeExists("passwordForm"));
+	}
+
+	@Test
+	@WithAccount("wannidev")
+	@DisplayName("정상적인 패스워드 수정")
+	void updatePassword_success() throws Exception {
+		mockMvc.perform(post("/settings/password")
+				.param("newPassword", "12345678")
+				.param("newPasswordConfirm", "12345678")
+				.with(csrf()))
+			.andExpect(status().is3xxRedirection())
+			.andExpect(redirectedUrl("/settings/password"))
+			.andExpect(flash().attributeExists("message"));
+
+		Account wannidev = accountInfoFinderService.findByNickName("wannidev");
+		assertTrue(passwordEncoder.matches("12345678", wannidev.getPassword()));
+	}
+
+	@Test
+	@WithAccount("wannidev")
+	@DisplayName("불일치한 비밀번호 입력값으로 발생하는 패스워드 수정 오류")
+	void updatePassword_fail() throws Exception {
+		mockMvc.perform(post("/settings/password")
+				.param("newPassword", "12345678")
+				.param("newPasswordConfirm", "11111111")
+				.with(csrf()))
+			.andExpect(status().isOk())
+			.andExpect(view().name("/settings/password"))
+			.andExpect(model().hasErrors())
+			.andExpect(model().attributeExists("passwordForm"))
+			.andExpect(model().attributeExists("account"));
 	}
 }
