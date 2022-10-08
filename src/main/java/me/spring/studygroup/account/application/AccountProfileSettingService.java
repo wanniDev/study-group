@@ -14,6 +14,8 @@ import me.spring.studygroup.account.presentation.form.ProfileForm;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class AccountProfileSettingService {
+
+	private final AccountAuthService accountAuthService;
 	private final AccountRepository accountRepository;
 	private final ModelMapper modelMapper;
 	private final PasswordEncoder passwordEncoder;
@@ -28,5 +30,12 @@ public class AccountProfileSettingService {
 	public void updatePassword(Account account, String newPassword) {
 		account.setPassword(passwordEncoder.encode(newPassword));
 		accountRepository.save(account);
+	}
+
+	@Transactional
+	public void updateNickname(Account account, String nickname) {
+		account.setNickname(nickname);
+		accountRepository.save(account);
+		accountAuthService.login(account);
 	}
 }

@@ -18,6 +18,7 @@ import me.spring.studygroup.account.application.AccountInfoFinderService;
 import me.spring.studygroup.account.application.AccountProfileSettingService;
 import me.spring.studygroup.account.domain.Account;
 import me.spring.studygroup.account.infrastructure.security.AuthAccount;
+import me.spring.studygroup.account.presentation.form.NicknameForm;
 import me.spring.studygroup.account.presentation.form.PasswordForm;
 import me.spring.studygroup.account.presentation.form.ProfileForm;
 import me.spring.studygroup.account.presentation.validator.PasswordFormValidator;
@@ -81,5 +82,25 @@ public class AccountProfileController {
 		profileSettingService.updatePassword(account, passwordForm.getNewPassword());
 		attributes.addFlashAttribute("message", "Password update successfully.");
 		return "redirect:/settings/password";
+	}
+
+	@GetMapping("/settings/account")
+	public String updateAccountForm(@AuthAccount Account account, Model model) {
+		model.addAttribute(account);
+		model.addAttribute(modelMapper.map(account, NicknameForm.class));
+		return "settings/account";
+	}
+
+	@PostMapping("/settings/account")
+	public String updateAccount(@AuthAccount Account account, @Valid NicknameForm nicknameForm, Errors errors,
+		Model model, RedirectAttributes attributes) {
+		if (errors.hasErrors()) {
+			model.addAttribute(account);
+			return "settings/account";
+		}
+
+		profileSettingService.updateNickname(account, nicknameForm.getNickname());
+		attributes.addFlashAttribute("message", "닉네임을 수정했습니다.");
+		return "redirect:/settings/account";
 	}
 }
