@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import me.spring.studygroup.account.domain.Account;
 import me.spring.studygroup.account.domain.AccountRepository;
+import me.spring.studygroup.account.presentation.form.NotificationForm;
 import me.spring.studygroup.account.presentation.form.ProfileForm;
 
 @Service
@@ -27,6 +28,12 @@ public class AccountProfileSettingService {
 	@Transactional
 	public void updatePassword(Account account, String newPassword) {
 		account.setPassword(passwordEncoder.encode(newPassword));
+		accountRepository.save(account);
+	}
+
+	@Transactional
+	public void updateNotifications(Account account, NotificationForm notificationForm) {
+		modelMapper.map(notificationForm, account);
 		accountRepository.save(account);
 	}
 }
