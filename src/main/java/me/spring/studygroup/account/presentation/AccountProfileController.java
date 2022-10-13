@@ -1,5 +1,9 @@
 package me.spring.studygroup.account.presentation;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
@@ -13,6 +17,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.RequiredArgsConstructor;
 import me.spring.studygroup.account.application.AccountInfoFinderService;
 import me.spring.studygroup.account.application.AccountProfileSettingService;
@@ -23,6 +30,7 @@ import me.spring.studygroup.account.presentation.form.NotificationForm;
 import me.spring.studygroup.account.presentation.form.PasswordForm;
 import me.spring.studygroup.account.presentation.form.ProfileForm;
 import me.spring.studygroup.account.presentation.validator.PasswordFormValidator;
+import me.spring.studygroup.tag.domain.Tag;
 
 @Controller
 @RequiredArgsConstructor
@@ -31,6 +39,7 @@ public class AccountProfileController {
 	private final AccountInfoFinderService accountInfoFinderService;
 	private final AccountProfileSettingService profileSettingService;
 	private final ModelMapper modelMapper;
+	private final ObjectMapper objectMapper;
 
 	@InitBinder("passwordForm")
 	public void passwordFormInitBinder(WebDataBinder webDataBinder) {
@@ -123,5 +132,18 @@ public class AccountProfileController {
 		profileSettingService.updateNotifications(account, notifications);
 		attributes.addFlashAttribute("message", "알림 설정을 변경했습니다.");
 		return "redirect:/settings/notifications";
+	}
+
+	@GetMapping("/settings/tags")
+	public String updateTags(@AuthAccount Account account, Model model) throws JsonProcessingException {
+		model.addAttribute(account);
+
+		Set<Tag> tags = accountInfoFinderService.findTagsBy(account);
+		model.addAttribute("tags", tags.stream().map(Tag::getTitle).collect(Collectors.toList()));
+
+		List<String> allTags = accountInfoFinderService.findTagsTitle();
+		model.addAttribute("whitelist", objectMapper.writeValueAsString(allTags));
+
+		return "settings/tags";
 	}
 }
