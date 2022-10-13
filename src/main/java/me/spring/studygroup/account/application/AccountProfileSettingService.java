@@ -8,32 +8,33 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import me.spring.studygroup.account.domain.Account;
 import me.spring.studygroup.account.domain.AccountRepository;
+import me.spring.studygroup.account.domain.AccountTag;
 import me.spring.studygroup.account.presentation.form.NotificationForm;
 import me.spring.studygroup.account.presentation.form.ProfileForm;
+import me.spring.studygroup.tag.domain.Tag;
+import me.spring.studygroup.tag.domain.TagRepository;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 public class AccountProfileSettingService {
 
 	private final AccountAuthService accountAuthService;
 	private final AccountRepository accountRepository;
+	private final TagRepository tagRepository;
 	private final ModelMapper modelMapper;
 	private final PasswordEncoder passwordEncoder;
 
-	@Transactional
 	public void updateProfile(Account account, ProfileForm profileForm) {
 		modelMapper.map(profileForm, account);
 		accountRepository.save(account);
 	}
 
-	@Transactional
 	public void updatePassword(Account account, String newPassword) {
 		account.setPassword(passwordEncoder.encode(newPassword));
 		accountRepository.save(account);
 	}
 
-	@Transactional
 	public void updateNickname(Account account, String nickname) {
 		account.setNickname(nickname);
 		accountRepository.save(account);
@@ -43,5 +44,15 @@ public class AccountProfileSettingService {
 	public void updateNotifications(Account account, NotificationForm notificationForm) {
 		modelMapper.map(notificationForm, account);
 		accountRepository.save(account);
+	}
+
+	public Tag findOrCreateNew(String tagTitle) {
+		return tagRepository.findByTitle(tagTitle)
+			.orElseGet(() -> tagRepository.save(Tag.builder().title(tagTitle).build()));
+	}
+
+	public void addTag(Account account, Tag tag) {
+		accountRepository.findById(account.getId())
+			.ifPresent(a -> a.getAccountTags().add(AccountTag.createNewAccountTag(account, tag)));
 	}
 }
