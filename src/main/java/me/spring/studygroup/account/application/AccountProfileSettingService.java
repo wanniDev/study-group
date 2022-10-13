@@ -38,6 +38,7 @@ public class AccountProfileSettingService {
 		account.setNickname(nickname);
 		accountRepository.save(account);
 		accountAuthService.login(account);
+	}
 
 	public void updateNotifications(Account account, NotificationForm notificationForm) {
 		modelMapper.map(notificationForm, account);
