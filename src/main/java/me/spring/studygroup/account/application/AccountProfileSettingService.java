@@ -1,6 +1,8 @@
 package me.spring.studygroup.account.application;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -13,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import me.spring.studygroup.account.domain.Account;
 import me.spring.studygroup.account.domain.AccountRepository;
 import me.spring.studygroup.account.domain.AccountTag;
+import me.spring.studygroup.account.domain.AccountTagRepository;
 import me.spring.studygroup.account.presentation.form.NotificationForm;
 import me.spring.studygroup.account.presentation.form.ProfileForm;
 import me.spring.studygroup.tag.domain.Tag;
@@ -27,6 +30,7 @@ public class AccountProfileSettingService {
 	private final AccountAuthService accountAuthService;
 	private final AccountRepository accountRepository;
 	private final TagRepository tagRepository;
+	private final AccountTagRepository accountTagRepository;
 	private final ModelMapper modelMapper;
 	private final PasswordEncoder passwordEncoder;
 
@@ -64,8 +68,7 @@ public class AccountProfileSettingService {
 	public void removeTag(Account account, TagForm tagForm) {
 		String title = tagForm.getTagTitle();
 		Tag tag = tagRepository.findByTitle(title).orElseThrow();
-		accountRepository.findById(account.getId())
-			.ifPresent(a -> a.getAccountTags().stream().map(AccountTag::getTag)
-				.collect(Collectors.toList()).remove(tag));
+		AccountTag accountTag = accountTagRepository.findAccountTagByAccountAndTag(account, tag);
+		accountTagRepository.delete(accountTag);
 	}
 }
