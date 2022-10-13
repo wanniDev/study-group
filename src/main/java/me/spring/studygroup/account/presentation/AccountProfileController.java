@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -31,6 +34,7 @@ import me.spring.studygroup.account.presentation.form.PasswordForm;
 import me.spring.studygroup.account.presentation.form.ProfileForm;
 import me.spring.studygroup.account.presentation.validator.PasswordFormValidator;
 import me.spring.studygroup.tag.domain.Tag;
+import me.spring.studygroup.tag.presentation.form.TagForm;
 
 @Controller
 @RequiredArgsConstructor
@@ -145,5 +149,13 @@ public class AccountProfileController {
 		model.addAttribute("whitelist", objectMapper.writeValueAsString(allTags));
 
 		return "settings/tags";
+	}
+
+	@PostMapping("/settings/tags/add")
+	@ResponseBody
+	public ResponseEntity addTag(@AuthAccount Account account, @RequestBody TagForm tagForm) {
+		Tag tag = profileSettingService.findOrCreateNew(tagForm.getTagTitle());
+		profileSettingService.addTag(account, tag);
+		return ResponseEntity.ok().build();
 	}
 }
