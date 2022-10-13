@@ -31,7 +31,7 @@ public class SecurityConfig {
 		return http
 				.authorizeRequests()
 				.mvcMatchers("/", "/login", "/sign-up", "/check-email-token", "/email-login",
-					"/login-link").permitAll()
+					"/login-link", "/h2-console").permitAll()
 				.mvcMatchers(HttpMethod.GET,  "/profile/*").permitAll()
 				.anyRequest().authenticated()
 
@@ -63,7 +63,8 @@ public class SecurityConfig {
 	public WebSecurityCustomizer webSecurityCustomizer() {
 		return web -> web.ignoring()
 			.mvcMatchers("/node_modules/**")
-			.requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+			.requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+			.requestMatchers(PathRequest.toH2Console());
 	}
 
 	@Bean
