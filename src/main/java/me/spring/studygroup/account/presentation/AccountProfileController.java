@@ -19,6 +19,7 @@ import me.spring.studygroup.account.application.AccountProfileSettingService;
 import me.spring.studygroup.account.domain.Account;
 import me.spring.studygroup.account.infrastructure.security.AuthAccount;
 import me.spring.studygroup.account.presentation.form.NicknameForm;
+import me.spring.studygroup.account.presentation.form.NotificationForm;
 import me.spring.studygroup.account.presentation.form.PasswordForm;
 import me.spring.studygroup.account.presentation.form.ProfileForm;
 import me.spring.studygroup.account.presentation.validator.PasswordFormValidator;
@@ -102,5 +103,25 @@ public class AccountProfileController {
 		profileSettingService.updateNickname(account, nicknameForm.getNickname());
 		attributes.addFlashAttribute("message", "닉네임을 수정했습니다.");
 		return "redirect:/settings/account";
+  }
+  
+	@GetMapping("/settings/notifications")
+	public String updateNotificationsForm(@AuthAccount Account account, Model model) {
+		model.addAttribute(account);
+		model.addAttribute(modelMapper.map(account, NotificationForm.class));
+		return "settings/notifications";
+	}
+
+	@PostMapping("/settings/notifications")
+	public String updateNotifications(@AuthAccount Account account, @Valid NotificationForm notifications, Errors errors,
+		Model model, RedirectAttributes attributes) {
+		if (errors.hasErrors()) {
+			model.addAttribute(account);
+			return "settings/notifications";
+		}
+
+		profileSettingService.updateNotifications(account, notifications);
+		attributes.addFlashAttribute("message", "알림 설정을 변경했습니다.");
+		return "redirect:/settings/notifications";
 	}
 }

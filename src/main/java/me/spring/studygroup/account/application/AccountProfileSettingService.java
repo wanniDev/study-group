@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import me.spring.studygroup.account.domain.Account;
 import me.spring.studygroup.account.domain.AccountRepository;
+import me.spring.studygroup.account.presentation.form.NotificationForm;
 import me.spring.studygroup.account.presentation.form.ProfileForm;
 
 @Service
@@ -37,5 +38,9 @@ public class AccountProfileSettingService {
 		account.setNickname(nickname);
 		accountRepository.save(account);
 		accountAuthService.login(account);
+
+	public void updateNotifications(Account account, NotificationForm notificationForm) {
+		modelMapper.map(notificationForm, account);
+		accountRepository.save(account);
 	}
 }
