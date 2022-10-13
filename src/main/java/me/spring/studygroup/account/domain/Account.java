@@ -1,9 +1,12 @@
 package me.spring.studygroup.account.domain;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +14,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -21,6 +27,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import me.spring.studygroup.tag.domain.Tag;
 
 @Entity
 @Data
@@ -30,6 +37,7 @@ import lombok.ToString;
 @AllArgsConstructor
 public class Account {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "account_id")
 	private Long id;
 
 	@Column(unique = true)
@@ -68,6 +76,9 @@ public class Account {
 	private boolean studyUpdatedByEmail;
 
 	private boolean studyUpdatedByWeb;
+
+	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+	private Set<AccountTag> tags = new HashSet<>();
 
 	public void generateEmailCheckToken() {
 		this.emailCheckToken = UUID.randomUUID().toString();
