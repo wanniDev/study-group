@@ -78,7 +78,7 @@ public class Account {
 	private boolean studyUpdatedByWeb;
 
 	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
-	private Set<AccountTag> tags = new HashSet<>();
+	private Set<AccountTag> accountTags = new HashSet<>();
 
 	public void generateEmailCheckToken() {
 		this.emailCheckToken = UUID.randomUUID().toString();
