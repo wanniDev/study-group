@@ -1,6 +1,10 @@
 package me.spring.studygroup.account.application;
 
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +17,7 @@ import me.spring.studygroup.account.presentation.form.NotificationForm;
 import me.spring.studygroup.account.presentation.form.ProfileForm;
 import me.spring.studygroup.tag.domain.Tag;
 import me.spring.studygroup.tag.domain.TagRepository;
+import me.spring.studygroup.tag.presentation.form.TagForm;
 
 @Service
 @Transactional
@@ -54,5 +59,13 @@ public class AccountProfileSettingService {
 	public void addTag(Account account, Tag tag) {
 		accountRepository.findById(account.getId())
 			.ifPresent(a -> a.getAccountTags().add(AccountTag.createNewAccountTag(account, tag)));
+	}
+
+	public void removeTag(Account account, TagForm tagForm) {
+		String title = tagForm.getTagTitle();
+		Tag tag = tagRepository.findByTitle(title).orElseThrow();
+		accountRepository.findById(account.getId())
+			.ifPresent(a -> a.getAccountTags().stream().map(AccountTag::getTag)
+				.collect(Collectors.toList()).remove(tag));
 	}
 }
