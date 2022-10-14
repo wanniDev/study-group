@@ -28,6 +28,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import me.spring.studygroup.tag.domain.Tag;
+import me.spring.studygroup.zone.domain.Zone;
 
 @Entity
 @Data
@@ -79,6 +80,9 @@ public class Account {
 
 	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
 	private Set<AccountTag> accountTags = new HashSet<>();
+
+	@ManyToMany
+	private Set<Zone> zones = new HashSet<>();
 
 	public void generateEmailCheckToken() {
 		this.emailCheckToken = UUID.randomUUID().toString();
