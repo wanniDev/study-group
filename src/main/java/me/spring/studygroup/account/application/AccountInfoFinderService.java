@@ -13,6 +13,8 @@ import me.spring.studygroup.account.domain.AccountRepository;
 import me.spring.studygroup.account.domain.AccountTag;
 import me.spring.studygroup.tag.domain.Tag;
 import me.spring.studygroup.tag.domain.TagRepository;
+import me.spring.studygroup.zone.domain.Zone;
+import me.spring.studygroup.zone.domain.ZoneRepository;
 
 @Service
 @Transactional(readOnly = true)
@@ -20,6 +22,7 @@ import me.spring.studygroup.tag.domain.TagRepository;
 public class AccountInfoFinderService {
 	private final AccountRepository accountRepository;
 	private final TagRepository tagRepository;
+	private final ZoneRepository zoneRepository;
 
 	public boolean existsByEmail(String email) {
 		return accountRepository.existsByEmail(email);
@@ -44,5 +47,14 @@ public class AccountInfoFinderService {
 
 	public List<String> findTagsTitle() {
 		return tagRepository.findTagsTitle();
+	}
+
+	public Set<Zone> findZonesFrom(Account auth) {
+		Account account = accountRepository.findById(auth.getId()).orElseThrow();
+		return account.getZones();
+	}
+
+	public List<String> findAllZonesWhitelist() {
+		return zoneRepository.findAll().stream().map(Zone::toString).collect(Collectors.toList());
 	}
 }

@@ -35,6 +35,7 @@ import me.spring.studygroup.account.presentation.form.ProfileForm;
 import me.spring.studygroup.account.presentation.validator.PasswordFormValidator;
 import me.spring.studygroup.tag.domain.Tag;
 import me.spring.studygroup.tag.presentation.form.TagForm;
+import me.spring.studygroup.zone.domain.Zone;
 
 @Controller
 @RequiredArgsConstructor
@@ -164,5 +165,18 @@ public class AccountProfileController {
 	public ResponseEntity removeTag(@AuthAccount Account account, @RequestBody TagForm tagForm) {
 		profileSettingService.removeTag(account, tagForm);
 		return ResponseEntity.ok().build();
+	}
+
+	@GetMapping("/settings/zones")
+	public String updateZonesForm(@AuthAccount Account account, Model model) throws JsonProcessingException {
+		model.addAttribute(account);
+
+		Set<Zone> zones = accountInfoFinderService.findZonesFrom(account);
+		model.addAttribute("zones", zones.stream().map(Zone::toString).collect(Collectors.toList()));
+
+		List<String> allZones = accountInfoFinderService.findAllZonesWhitelist();
+		model.addAttribute("whitelist", objectMapper.writeValueAsString(allZones));
+
+		return "settings/zones";
 	}
 }
