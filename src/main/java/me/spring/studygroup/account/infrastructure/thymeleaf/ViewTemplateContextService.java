@@ -24,13 +24,13 @@ public class ViewTemplateContextService {
 			"&email=" + newAccount.getEmail());
 		context.setVariable("nickname", newAccount.getNickname());
 		context.setVariable("linkName", "이메일 인증하기");
-		context.setVariable("message", "스터디올래 서비스를 사용하려면 링크를 클릭하세요.");
+		context.setVariable("message", "스터디그룹 서비스를 사용하려면 링크를 클릭하세요.");
 		context.setVariable("host", appProperties.getHost());
 		String message = templateEngine.process("mail/simple-link", context);
 
 		EmailMessage emailMessage = EmailMessage.builder()
 			.to(newAccount.getEmail())
-			.subject("스터디올래, 회원 가입 인증")
+			.subject("스터디그룹, 회원 가입 인증")
 			.message(message)
 			.build();
 
