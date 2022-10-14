@@ -1,22 +1,35 @@
 package me.spring.studygroup.account.presentation;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import me.spring.studygroup.account.application.AccountInfoFinderService;
+import me.spring.studygroup.account.application.AccountProfileSettingService;
 import me.spring.studygroup.account.domain.Account;
 import me.spring.studygroup.account.domain.AccountRepository;
+import me.spring.studygroup.account.domain.AccountTag;
+import me.spring.studygroup.account.domain.AccountTagRepository;
 import me.spring.studygroup.common.annotation.MockMvcTest;
 import me.spring.studygroup.common.annotation.WithAccount;
+import me.spring.studygroup.tag.domain.Tag;
+import me.spring.studygroup.tag.presentation.form.TagForm;
 
 @MockMvcTest
 class AccountProfileControllerTest {
@@ -26,9 +39,16 @@ class AccountProfileControllerTest {
 	@Autowired
 	AccountRepository accountRepository;
 	@Autowired
+	AccountTagRepository accountTagRepository;
+	@Autowired
 	AccountInfoFinderService accountInfoFinderService;
 	@Autowired
 	PasswordEncoder passwordEncoder;
+	@Autowired
+	AccountProfileSettingService accountProfileSettingService;
+	@Autowired
+	ObjectMapper objectMapper;
+
 	@AfterEach
 	void afterEach() {
 		accountRepository.deleteAll();
@@ -157,5 +177,36 @@ class AccountProfileControllerTest {
 			.andExpect(model().hasErrors())
 			.andExpect(model().attributeExists("account"))
 			.andExpect(model().attributeExists("nicknameForm"));
+	}
+
+	@Test
+	@DisplayName("계정의 태그 수정 폼")
+	@WithAccount("wannidev")
+	void updateTagsForm() throws Exception {
+		mockMvc.perform(get("/settings/tags"))
+			.andExpect(view().name("/settings/tags"))
+			.andExpect(model().attributeExists("account"))
+			.andExpect(model().attributeExists("whitelist"))
+			.andExpect(model().attributeExists("tags"));
+	}
+
+	@Test
+	@DisplayName("계정에 태그 추가")
+	@WithAccount("wannidev")
+	void addTag() throws Exception {
+		TagForm tagForm = new TagForm();
+		tagForm.setTagTitle("newTag");
+
+		mockMvc.perform(post("/settings/tags/add")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(tagForm))
+				.with(csrf()))
+			.andExpect(status().isOk());
+
+		Tag newTag = accountProfileSettingService.findOrCreateNew("newTag");
+		assertNotNull(newTag);
+		Account wannidev = accountRepository.findByNickname("wannidev").orElseThrow();
+		assertTrue(wannidev.getAccountTags().stream()
+			.map(AccountTag::getTag).collect(Collectors.toSet()).contains(newTag));
 	}
 }
