@@ -35,7 +35,9 @@ import me.spring.studygroup.account.presentation.form.ProfileForm;
 import me.spring.studygroup.account.presentation.validator.PasswordFormValidator;
 import me.spring.studygroup.tag.domain.Tag;
 import me.spring.studygroup.tag.presentation.form.TagForm;
+import me.spring.studygroup.zone.application.ZoneInfoFinderService;
 import me.spring.studygroup.zone.domain.Zone;
+import me.spring.studygroup.zone.presentation.form.ZoneForm;
 
 @Controller
 @RequiredArgsConstructor
@@ -43,6 +45,7 @@ public class AccountProfileController {
 
 	private final AccountInfoFinderService accountInfoFinderService;
 	private final AccountProfileSettingService profileSettingService;
+	private final ZoneInfoFinderService zoneInfoFinderService;
 	private final ModelMapper modelMapper;
 	private final ObjectMapper objectMapper;
 
@@ -164,6 +167,15 @@ public class AccountProfileController {
 	@ResponseBody
 	public ResponseEntity removeTag(@AuthAccount Account account, @RequestBody TagForm tagForm) {
 		profileSettingService.removeTag(account, tagForm);
+		return ResponseEntity.ok().build();
+	}
+
+	@PostMapping("/settings/zones/add")
+	@ResponseBody
+	public ResponseEntity addZone(@AuthAccount Account account, @RequestBody ZoneForm zoneForm) {
+		Zone zone = zoneInfoFinderService.findByCityAndProvince(zoneForm);
+
+		profileSettingService.addZone(account, zone);
 		return ResponseEntity.ok().build();
 	}
 
