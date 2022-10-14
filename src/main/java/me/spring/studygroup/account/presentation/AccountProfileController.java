@@ -191,4 +191,13 @@ public class AccountProfileController {
 
 		return "settings/zones";
 	}
+
+	@PostMapping("/settings/zones/remove")
+	@ResponseBody
+	public ResponseEntity removeZone(@AuthAccount Account account, @RequestBody ZoneForm zoneForm) {
+		Zone zone = zoneInfoFinderService.findByCityAndProvince(zoneForm);
+
+		profileSettingService.removeZone(account, zone);
+		return ResponseEntity.ok().build();
+	}
 }

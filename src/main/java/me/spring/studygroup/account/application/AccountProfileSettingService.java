@@ -77,4 +77,9 @@ public class AccountProfileSettingService {
 		accountRepository.findById(account.getId())
 			.ifPresent(a -> a.getZones().add(zone));
 	}
+
+	public void removeZone(Account account, Zone zone) {
+		Optional<Account> byId = accountRepository.findById(account.getId());
+		byId.ifPresent(a -> a.getZones().remove(zone));
+	}
 }
