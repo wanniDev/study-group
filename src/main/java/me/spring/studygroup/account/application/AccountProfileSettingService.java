@@ -21,6 +21,7 @@ import me.spring.studygroup.account.presentation.form.ProfileForm;
 import me.spring.studygroup.tag.domain.Tag;
 import me.spring.studygroup.tag.domain.TagRepository;
 import me.spring.studygroup.tag.presentation.form.TagForm;
+import me.spring.studygroup.zone.domain.Zone;
 
 @Service
 @Transactional
@@ -70,5 +71,10 @@ public class AccountProfileSettingService {
 		Tag tag = tagRepository.findByTitle(title).orElseThrow();
 		AccountTag accountTag = accountTagRepository.findAccountTagByAccountAndTag(account, tag);
 		accountTagRepository.delete(accountTag);
+	}
+
+	public void addZone(Account account, Zone zone) {
+		accountRepository.findById(account.getId())
+			.ifPresent(a -> a.getZones().add(zone));
 	}
 }
