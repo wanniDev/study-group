@@ -80,4 +80,7 @@ public class Study {
 
     private int memberCount;
 
+    public void addManager(Account account) {
+        this.managers.add(account);
+    }
 }
