@@ -1,4 +1,4 @@
-package me.spring.studygroup.study;
+package me.spring.studygroup.study.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

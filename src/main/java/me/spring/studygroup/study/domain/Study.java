@@ -1,7 +1,5 @@
-package me.spring.studygroup.study;
+package me.spring.studygroup.study.domain;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,7 +21,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import me.spring.studygroup.account.domain.Account;
-import me.spring.studygroup.account.infrastructure.security.AccountPrincipal;
 import me.spring.studygroup.tag.domain.Tag;
 import me.spring.studygroup.zone.domain.Zone;
 
