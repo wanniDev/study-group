@@ -29,6 +29,7 @@ import me.spring.studygroup.account.domain.AccountTag;
 import me.spring.studygroup.account.domain.AccountTagRepository;
 import me.spring.studygroup.common.annotation.MockMvcTest;
 import me.spring.studygroup.common.annotation.WithAccount;
+import me.spring.studygroup.tag.application.TagManagerService;
 import me.spring.studygroup.tag.domain.Tag;
 import me.spring.studygroup.tag.presentation.form.TagForm;
 import me.spring.studygroup.zone.application.ZoneInfoFinderService;
@@ -51,6 +52,8 @@ class AccountProfileControllerTest {
 	PasswordEncoder passwordEncoder;
 	@Autowired
 	AccountProfileSettingService accountProfileSettingService;
+	@Autowired
+	TagManagerService tagManagerService;
 	@Autowired
 	ZoneRepository zoneRepository;
 	@Autowired
@@ -219,7 +222,7 @@ class AccountProfileControllerTest {
 				.with(csrf()))
 			.andExpect(status().isOk());
 
-		Tag newTag = accountProfileSettingService.findOrCreateNew("newTag");
+		Tag newTag = tagManagerService.findOrCreateNew("newTag");
 		assertNotNull(newTag);
 		Account wannidev = accountRepository.findByNickname("wannidev").orElseThrow();
 		assertTrue(wannidev.getAccountTags().stream()

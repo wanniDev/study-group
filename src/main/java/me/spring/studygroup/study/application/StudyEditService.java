@@ -48,4 +48,8 @@ public class StudyEditService {
 	public void addTag(Study study, Tag tag) {
 		study.getTags().add(tag);
 	}
+
+	public void removeTag(Study study, Tag tag) {
+
+	}
 }

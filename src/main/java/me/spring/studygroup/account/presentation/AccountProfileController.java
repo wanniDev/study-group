@@ -161,14 +161,14 @@ public class AccountProfileController {
 	@ResponseBody
 	public ResponseEntity addTag(@AuthAccount Account account, @RequestBody TagForm tagForm) {
 		Tag tag = tagManagerService.findOrCreateNew(tagForm.getTagTitle());
-		profileSettingService.addTag(account, tag);
+		tagManagerService.addTag(account, tag);
 		return ResponseEntity.ok().build();
 	}
 
 	@PostMapping("/settings/tags/remove")
 	@ResponseBody
 	public ResponseEntity removeTag(@AuthAccount Account account, @RequestBody TagForm tagForm) {
-		profileSettingService.removeTag(account, tagForm);
+		tagManagerService.removeTag(account, tagForm);
 		return ResponseEntity.ok().build();
 	}
 

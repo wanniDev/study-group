@@ -122,4 +122,15 @@ public class StudyEditController {
 		studyEditService.addTag(study, tag);
 		return ResponseEntity.ok().build();
 	}
+
+	@PostMapping("/tags/remove")
+	@ResponseBody
+	public ResponseEntity removeTag(@AuthAccount Account account, @PathVariable String path,
+		@RequestBody TagForm tagForm) {
+		Study study = studyFinderService.findByPath(path, account);
+		Tag tag = tagManagerService.findByTitle(tagForm.getTagTitle());
+
+		studyEditService.removeTag(study, tag);
+		return ResponseEntity.ok().build();
+	}
 }

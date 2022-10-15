@@ -61,18 +61,6 @@ public class AccountProfileSettingService {
 			.orElseGet(() -> tagRepository.save(Tag.builder().title(tagTitle).build()));
 	}
 
-	public void addTag(Account account, Tag tag) {
-		accountRepository.findById(account.getId())
-			.ifPresent(a -> a.getAccountTags().add(AccountTag.createNewAccountTag(account, tag)));
-	}
-
-	public void removeTag(Account account, TagForm tagForm) {
-		String title = tagForm.getTagTitle();
-		Tag tag = tagRepository.findByTitle(title).orElseThrow();
-		AccountTag accountTag = accountTagRepository.findAccountTagByAccountAndTag(account, tag);
-		accountTagRepository.delete(accountTag);
-	}
-
 	public void addZone(Account account, Zone zone) {
 		accountRepository.findById(account.getId())
 			.ifPresent(a -> a.getZones().add(zone));
