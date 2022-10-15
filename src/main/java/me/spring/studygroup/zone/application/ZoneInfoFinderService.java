@@ -1,5 +1,8 @@
 package me.spring.studygroup.zone.application;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,5 +20,9 @@ public class ZoneInfoFinderService {
 	public Zone findByCityAndProvince(ZoneForm zoneForm) {
 		return zoneRepository
 			.findByCityAndProvince(zoneForm.getCityName(), zoneForm.getProvinceName()).orElseThrow();
+	}
+
+	public List<String> findZonesWhiteList() {
+		return zoneRepository.findAll().stream().map(Zone::toString).collect(Collectors.toList());
 	}
 }

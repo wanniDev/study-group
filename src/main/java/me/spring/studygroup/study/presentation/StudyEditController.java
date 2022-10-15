@@ -32,6 +32,8 @@ import me.spring.studygroup.tag.application.TagManagerService;
 import me.spring.studygroup.tag.domain.Tag;
 import me.spring.studygroup.tag.domain.TagRepository;
 import me.spring.studygroup.tag.presentation.form.TagForm;
+import me.spring.studygroup.zone.application.ZoneInfoFinderService;
+import me.spring.studygroup.zone.domain.Zone;
 
 @Controller
 @RequestMapping("/study/{path}/settings")
@@ -41,6 +43,7 @@ public class StudyEditController {
 	private final StudyFinderService studyFinderService;
 	private final StudyEditService studyEditService;
 	private final TagManagerService tagManagerService;
+	private final ZoneInfoFinderService zoneInfoFinderService;
 	private final TagRepository tagRepository;
 	private final ModelMapper modelMapper;
 	private final ObjectMapper objectMapper;
@@ -133,4 +136,19 @@ public class StudyEditController {
 		studyEditService.removeTag(study, tag);
 		return ResponseEntity.ok().build();
 	}
+
+	@GetMapping("/zones")
+	public String studyZonesForm(@AuthAccount Account account, @PathVariable String path, Model model)
+		throws JsonProcessingException {
+		Study study = studyFinderService.findByPath(path, account);
+		model.addAttribute(account);
+		model.addAttribute(study);
+		model.addAttribute("zones", study.getZones().stream()
+			.map(Zone::toString).collect(Collectors.toList()));
+		List<String> allZones = zoneInfoFinderService.findZonesWhiteList();
+		model.addAttribute("whitelist", objectMapper.writeValueAsString(allZones));
+		return "study/settings/zones";
+	}
+
+
 }
