@@ -15,8 +15,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import lombok.RequiredArgsConstructor;
 import me.spring.studygroup.account.domain.Account;
 import me.spring.studygroup.account.infrastructure.security.AuthAccount;
+import me.spring.studygroup.study.application.StudyEditService;
 import me.spring.studygroup.study.domain.Study;
-import me.spring.studygroup.study.presentation.application.StudyFinderService;
+import me.spring.studygroup.study.application.StudyFinderService;
 import me.spring.studygroup.study.presentation.form.StudyDescriptionForm;
 
 @Controller
@@ -25,6 +26,7 @@ import me.spring.studygroup.study.presentation.form.StudyDescriptionForm;
 public class StudyEditController {
 
 	private final StudyFinderService studyFinderService;
+	private final StudyEditService studyEditService;
 	private final ModelMapper modelMapper;
 
 	@GetMapping("/description")
@@ -48,8 +50,10 @@ public class StudyEditController {
 			return "study/settings/description";
 		}
 
-		studyService.updateStudyDescription(study, studyDescriptionForm);
+		studyEditService.saveStudyDescription(study, studyDescriptionForm);
 		attributes.addFlashAttribute("message", "스터디 소개를 수정했습니다.");
 		return "redirect:/study/" + study.getEncodedPath() + "/settings/description";
 	}
+
+	
 }

@@ -1,4 +1,4 @@
-package me.spring.studygroup.study.presentation.application;
+package me.spring.studygroup.study.application;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;

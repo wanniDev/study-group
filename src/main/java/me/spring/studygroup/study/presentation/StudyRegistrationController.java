@@ -19,8 +19,8 @@ import lombok.RequiredArgsConstructor;
 import me.spring.studygroup.account.domain.Account;
 import me.spring.studygroup.account.infrastructure.security.AuthAccount;
 import me.spring.studygroup.study.domain.Study;
-import me.spring.studygroup.study.presentation.application.StudyFinderService;
-import me.spring.studygroup.study.presentation.application.StudyRegisterService;
+import me.spring.studygroup.study.application.StudyFinderService;
+import me.spring.studygroup.study.application.StudyRegisterService;
 import me.spring.studygroup.study.presentation.form.StudyForm;
 import me.spring.studygroup.study.presentation.validator.StudyFormValidator;
 
