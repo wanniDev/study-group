@@ -1,5 +1,8 @@
 package me.spring.studygroup.study.presentation;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
@@ -12,6 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.RequiredArgsConstructor;
 import me.spring.studygroup.account.domain.Account;
 import me.spring.studygroup.account.infrastructure.security.AuthAccount;
@@ -19,6 +25,8 @@ import me.spring.studygroup.study.application.StudyEditService;
 import me.spring.studygroup.study.domain.Study;
 import me.spring.studygroup.study.application.StudyFinderService;
 import me.spring.studygroup.study.presentation.form.StudyDescriptionForm;
+import me.spring.studygroup.tag.domain.Tag;
+import me.spring.studygroup.tag.domain.TagRepository;
 
 @Controller
 @RequestMapping("/study/{path}/settings")
@@ -27,7 +35,9 @@ public class StudyEditController {
 
 	private final StudyFinderService studyFinderService;
 	private final StudyEditService studyEditService;
+	private final TagRepository tagRepository;
 	private final ModelMapper modelMapper;
+	private final ObjectMapper objectMapper;
 
 	@GetMapping("/description")
 	public String viewStudySetting(@AuthAccount Account account, @PathVariable String path, Model model) {
@@ -82,4 +92,20 @@ public class StudyEditController {
 		Study study = studyEditService.disableStudyBanner(path, account);
 		return "redirect:/study/" + study.getEncodedPath() + "/settings/banner";
 	}
+
+	@GetMapping("/tags")
+	public String studyTagsForm(@AuthAccount Account account, @PathVariable String path, Model model)
+		throws JsonProcessingException {
+		Study study = studyFinderService.findByPath(path, account);
+		model.addAttribute(account);
+		model.addAttribute(study);
+
+		model.addAttribute("tags", study.getTags().stream()
+			.map(Tag::getTitle).collect(Collectors.toList()));
+		List<String> allTagTitles = tagRepository.findTagsTitle();
+		model.addAttribute("whitelist", objectMapper.writeValueAsString(allTagTitles));
+		return "study/settings/tags";
+	}
+
+	
 }
