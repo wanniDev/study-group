@@ -16,7 +16,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.spring.studygroup.account.domain.Account;
 
-@Entity
+// @Entity
 @Table(name = "account_study")
 @Getter
 @EqualsAndHashCode(of = "id")
