@@ -55,5 +55,11 @@ public class StudyEditController {
 		return "redirect:/study/" + study.getEncodedPath() + "/settings/description";
 	}
 
-	
+	@GetMapping("/banner")
+	public String studyImageForm(@AuthAccount Account account, @PathVariable String path, Model model) {
+		Study study = studyFinderService.findByPath(path, account);
+		model.addAttribute(account);
+		model.addAttribute(study);
+		return "study/settings/banner";
+	}
 }
