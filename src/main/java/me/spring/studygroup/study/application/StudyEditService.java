@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import me.spring.studygroup.account.domain.Account;
 import me.spring.studygroup.study.domain.Study;
 import me.spring.studygroup.study.presentation.form.StudyDescriptionForm;
+import me.spring.studygroup.tag.domain.Tag;
 
 @Service
 @Transactional
@@ -42,5 +43,9 @@ public class StudyEditService {
 		Study study = studyFinderService.findByPath(path, account);
 		study.setUseBanner(true);
 		return study;
+	}
+
+	public void addTag(Study study, Tag tag) {
+		study.getTags().add(tag);
 	}
 }

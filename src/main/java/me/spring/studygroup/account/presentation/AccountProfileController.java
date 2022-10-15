@@ -33,6 +33,7 @@ import me.spring.studygroup.account.presentation.form.NotificationForm;
 import me.spring.studygroup.account.presentation.form.PasswordForm;
 import me.spring.studygroup.account.presentation.form.ProfileForm;
 import me.spring.studygroup.account.presentation.validator.PasswordFormValidator;
+import me.spring.studygroup.tag.application.TagManagerService;
 import me.spring.studygroup.tag.domain.Tag;
 import me.spring.studygroup.tag.presentation.form.TagForm;
 import me.spring.studygroup.zone.application.ZoneInfoFinderService;
@@ -45,6 +46,7 @@ public class AccountProfileController {
 
 	private final AccountInfoFinderService accountInfoFinderService;
 	private final AccountProfileSettingService profileSettingService;
+	private final TagManagerService tagManagerService;
 	private final ZoneInfoFinderService zoneInfoFinderService;
 	private final ModelMapper modelMapper;
 	private final ObjectMapper objectMapper;
@@ -158,7 +160,7 @@ public class AccountProfileController {
 	@PostMapping("/settings/tags/add")
 	@ResponseBody
 	public ResponseEntity addTag(@AuthAccount Account account, @RequestBody TagForm tagForm) {
-		Tag tag = profileSettingService.findOrCreateNew(tagForm.getTagTitle());
+		Tag tag = tagManagerService.findOrCreateNew(tagForm.getTagTitle());
 		profileSettingService.addTag(account, tag);
 		return ResponseEntity.ok().build();
 	}

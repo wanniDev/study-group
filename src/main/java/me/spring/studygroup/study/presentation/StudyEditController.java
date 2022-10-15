@@ -6,13 +6,16 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -25,8 +28,10 @@ import me.spring.studygroup.study.application.StudyEditService;
 import me.spring.studygroup.study.domain.Study;
 import me.spring.studygroup.study.application.StudyFinderService;
 import me.spring.studygroup.study.presentation.form.StudyDescriptionForm;
+import me.spring.studygroup.tag.application.TagManagerService;
 import me.spring.studygroup.tag.domain.Tag;
 import me.spring.studygroup.tag.domain.TagRepository;
+import me.spring.studygroup.tag.presentation.form.TagForm;
 
 @Controller
 @RequestMapping("/study/{path}/settings")
@@ -35,6 +40,7 @@ public class StudyEditController {
 
 	private final StudyFinderService studyFinderService;
 	private final StudyEditService studyEditService;
+	private final TagManagerService tagManagerService;
 	private final TagRepository tagRepository;
 	private final ModelMapper modelMapper;
 	private final ObjectMapper objectMapper;
@@ -107,5 +113,13 @@ public class StudyEditController {
 		return "study/settings/tags";
 	}
 
-	
+	@PostMapping("/tags/add")
+	@ResponseBody
+	public ResponseEntity addTag(@AuthAccount Account account, @PathVariable String path,
+		@RequestBody TagForm tagForm) {
+		Study study = studyFinderService.findByPath(path, account);
+		Tag tag = tagManagerService.findOrCreateNew(tagForm.getTagTitle());
+		studyEditService.addTag(study, tag);
+		return ResponseEntity.ok().build();
+	}
 }
