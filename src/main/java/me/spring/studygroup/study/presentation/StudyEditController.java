@@ -50,7 +50,7 @@ public class StudyEditController {
 			return "study/settings/description";
 		}
 
-		studyEditService.saveStudyDescription(study, studyDescriptionForm);
+		studyEditService.saveDescription(study, studyDescriptionForm);
 		attributes.addFlashAttribute("message", "스터디 소개를 수정했습니다.");
 		return "redirect:/study/" + study.getEncodedPath() + "/settings/description";
 	}
@@ -61,5 +61,13 @@ public class StudyEditController {
 		model.addAttribute(account);
 		model.addAttribute(study);
 		return "study/settings/banner";
+	}
+
+	@PostMapping("/banner")
+	public String studyImageSubmit(@AuthAccount Account account, @PathVariable String path,
+		String image, RedirectAttributes attributes) {
+		Study study = studyEditService.saveBanner(path, account, image);
+		attributes.addFlashAttribute("message", "스터디 이미지를 수정했습니다.");
+		return "redirect:/study/" + study.getEncodedPath() + "/settings/banner";
 	}
 }
