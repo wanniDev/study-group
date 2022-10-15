@@ -9,4 +9,6 @@ import me.spring.studygroup.study.domain.Study;
 public interface StudyRepository extends JpaRepository<Study, Long> {
 	boolean existsByPath(String path);
 	Optional<Study> findByPath(String path);
+
+	Optional<Study> findStudyWithZonesByPath(String path);
 }

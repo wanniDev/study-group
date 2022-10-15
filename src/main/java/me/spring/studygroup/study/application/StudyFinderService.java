@@ -26,4 +26,8 @@ public class StudyFinderService {
 		}
 		return study;
 	}
+
+	public Study findByZoneAndPath(String path) {
+		return studyRepository.findStudyWithZonesByPath(path).orElseThrow();
+	}
 }

@@ -34,6 +34,7 @@ import me.spring.studygroup.tag.domain.TagRepository;
 import me.spring.studygroup.tag.presentation.form.TagForm;
 import me.spring.studygroup.zone.application.ZoneInfoFinderService;
 import me.spring.studygroup.zone.domain.Zone;
+import me.spring.studygroup.zone.presentation.form.ZoneForm;
 
 @Controller
 @RequestMapping("/study/{path}/settings")
@@ -150,5 +151,21 @@ public class StudyEditController {
 		return "study/settings/zones";
 	}
 
+	@PostMapping("/zones/add")
+	@ResponseBody
+	public ResponseEntity addZone(@AuthAccount Account account, @PathVariable String path,
+		@RequestBody ZoneForm zoneForm) {
 
+		studyEditService.saveZone(account, path, zoneForm);
+		return ResponseEntity.ok().build();
+	}
+
+	@PostMapping("/zones/remove")
+	@ResponseBody
+	public ResponseEntity removeZone(@AuthAccount Account account, @PathVariable String path,
+		@RequestBody ZoneForm zoneForm) {
+
+		studyEditService.removeZone(account, path, zoneForm);
+		return ResponseEntity.ok().build();
+	}
 }
