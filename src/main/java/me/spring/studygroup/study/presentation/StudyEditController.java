@@ -70,4 +70,16 @@ public class StudyEditController {
 		attributes.addFlashAttribute("message", "스터디 이미지를 수정했습니다.");
 		return "redirect:/study/" + study.getEncodedPath() + "/settings/banner";
 	}
+
+	@PostMapping("/banner/enable")
+	public String enableStudyBanner(@AuthAccount Account account, @PathVariable String path) {
+		Study study = studyEditService.enableStudyBanner(path, account);
+		return "redirect:/study/" + study.getEncodedPath() + "/settings/banner";
+	}
+
+	@PostMapping("/banner/disable")
+	public String disableStudyBanner(@AuthAccount Account account, @PathVariable String path) {
+		Study study = studyEditService.disableStudyBanner(path, account);
+		return "redirect:/study/" + study.getEncodedPath() + "/settings/banner";
+	}
 }

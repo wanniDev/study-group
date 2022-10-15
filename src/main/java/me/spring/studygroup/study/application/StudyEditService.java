@@ -31,4 +31,16 @@ public class StudyEditService {
 		saveImage(study, image);
 		return study;
 	}
+
+	public Study enableStudyBanner(String path, Account account) {
+		Study study = studyFinderService.findByPath(path, account);
+		study.setUseBanner(true);
+		return study;
+	}
+
+	public Study disableStudyBanner(String path, Account account) {
+		Study study = studyFinderService.findByPath(path, account);
+		study.setUseBanner(true);
+		return study;
+	}
 }
