@@ -168,4 +168,12 @@ public class StudyEditController {
 		studyEditService.removeZone(account, path, zoneForm);
 		return ResponseEntity.ok().build();
 	}
+
+	@GetMapping("/study")
+	public String studySettingForm(@AuthAccount Account account, @PathVariable String path, Model model) {
+		Study study = studyFinderService.findByPathForManager(path, account);
+		model.addAttribute(account);
+		model.addAttribute(study);
+		return "study/settings/study";
+	}
 }
