@@ -19,7 +19,7 @@ public class StudyFinderService {
 		return studyRepository.findByPath(path).orElseThrow();
 	}
 
-	public Study findByPath(String path, Account account) {
+	public Study findByPathForManager(String path, Account account) {
 		Study study = findByPath(path);
 		if (!study.isManagedBy(account)) {
 			throw new AccessDeniedException("해당 기능을 사용할 수 없습니다.");

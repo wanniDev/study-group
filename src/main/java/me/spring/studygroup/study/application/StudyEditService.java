@@ -1,23 +1,18 @@
 package me.spring.studygroup.study.application;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import lombok.RequiredArgsConstructor;
 import me.spring.studygroup.account.domain.Account;
-import me.spring.studygroup.account.infrastructure.security.AuthAccount;
 import me.spring.studygroup.study.domain.Study;
 import me.spring.studygroup.study.presentation.form.StudyDescriptionForm;
 import me.spring.studygroup.study.presentation.form.StudyRepository;
 import me.spring.studygroup.tag.domain.Tag;
 import me.spring.studygroup.zone.application.ZoneInfoFinderService;
 import me.spring.studygroup.zone.domain.Zone;
-import me.spring.studygroup.zone.domain.ZoneRepository;
 import me.spring.studygroup.zone.presentation.form.ZoneForm;
 
 @Service
@@ -40,19 +35,19 @@ public class StudyEditService {
 	}
 
 	public Study saveBanner(String path, Account account, String image) {
-		Study study = studyFinderService.findByPath(path, account);
+		Study study = studyFinderService.findByPathForManager(path, account);
 		saveImage(study, image);
 		return study;
 	}
 
 	public Study enableStudyBanner(String path, Account account) {
-		Study study = studyFinderService.findByPath(path, account);
+		Study study = studyFinderService.findByPathForManager(path, account);
 		study.setUseBanner(true);
 		return study;
 	}
 
 	public Study disableStudyBanner(String path, Account account) {
-		Study study = studyFinderService.findByPath(path, account);
+		Study study = studyFinderService.findByPathForManager(path, account);
 		study.setUseBanner(true);
 		return study;
 	}

@@ -51,7 +51,7 @@ public class StudyEditController {
 
 	@GetMapping("/description")
 	public String viewStudySetting(@AuthAccount Account account, @PathVariable String path, Model model) {
-		Study study = studyFinderService.findByPath(path, account);
+		Study study = studyFinderService.findByPathForManager(path, account);
 		model.addAttribute(account);
 		model.addAttribute(study);
 		model.addAttribute(modelMapper.map(study, StudyDescriptionForm.class));
@@ -62,7 +62,7 @@ public class StudyEditController {
 	public String updateStudyInfo(@AuthAccount Account account, @PathVariable String path,
 		@Valid StudyDescriptionForm studyDescriptionForm, Errors errors,
 		Model model, RedirectAttributes attributes) {
-		Study study = studyFinderService.findByPath(path, account);
+		Study study = studyFinderService.findByPathForManager(path, account);
 
 		if (errors.hasErrors()) {
 			model.addAttribute(account);
@@ -77,7 +77,7 @@ public class StudyEditController {
 
 	@GetMapping("/banner")
 	public String studyImageForm(@AuthAccount Account account, @PathVariable String path, Model model) {
-		Study study = studyFinderService.findByPath(path, account);
+		Study study = studyFinderService.findByPathForManager(path, account);
 		model.addAttribute(account);
 		model.addAttribute(study);
 		return "study/settings/banner";
@@ -106,7 +106,7 @@ public class StudyEditController {
 	@GetMapping("/tags")
 	public String studyTagsForm(@AuthAccount Account account, @PathVariable String path, Model model)
 		throws JsonProcessingException {
-		Study study = studyFinderService.findByPath(path, account);
+		Study study = studyFinderService.findByPathForManager(path, account);
 		model.addAttribute(account);
 		model.addAttribute(study);
 
@@ -121,7 +121,7 @@ public class StudyEditController {
 	@ResponseBody
 	public ResponseEntity addTag(@AuthAccount Account account, @PathVariable String path,
 		@RequestBody TagForm tagForm) {
-		Study study = studyFinderService.findByPath(path, account);
+		Study study = studyFinderService.findByPathForManager(path, account);
 		Tag tag = tagManagerService.findOrCreateNew(tagForm.getTagTitle());
 		studyEditService.addTag(study, tag);
 		return ResponseEntity.ok().build();
@@ -131,7 +131,7 @@ public class StudyEditController {
 	@ResponseBody
 	public ResponseEntity removeTag(@AuthAccount Account account, @PathVariable String path,
 		@RequestBody TagForm tagForm) {
-		Study study = studyFinderService.findByPath(path, account);
+		Study study = studyFinderService.findByPathForManager(path, account);
 		Tag tag = tagManagerService.findByTitle(tagForm.getTagTitle());
 
 		studyEditService.removeTag(study, tag);
@@ -141,7 +141,7 @@ public class StudyEditController {
 	@GetMapping("/zones")
 	public String studyZonesForm(@AuthAccount Account account, @PathVariable String path, Model model)
 		throws JsonProcessingException {
-		Study study = studyFinderService.findByPath(path, account);
+		Study study = studyFinderService.findByPathForManager(path, account);
 		model.addAttribute(account);
 		model.addAttribute(study);
 		model.addAttribute("zones", study.getZones().stream()
